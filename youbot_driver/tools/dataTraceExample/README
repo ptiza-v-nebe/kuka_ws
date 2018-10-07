@@ -1,0 +1,13 @@
+How to use DataTrace?
+
+1. write application with datatrace api
+
+2. compile, link to youbot_driver and boost
+
+3. place into folder config a "gnuplotconfig" 
+   with gnuplot configuration
+
+4. start your application
+
+In folder with measured data there will be a pdf with multiple plots.
+You can change gnuplotconfig to adjust the plots to your needs.

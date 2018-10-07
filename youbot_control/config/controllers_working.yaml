@@ -1,0 +1,68 @@
+youbot:
+    manipulator:
+      hardware_interface:
+        loop_hz: 2
+        joints:
+          - arm_joint_1
+          - arm_joint_2
+          - arm_joint_3
+          - arm_joint_4
+          - arm_joint_5
+    base:
+      hardware_interface:
+        loop_hz: 2
+        joints:
+          - virtual_x
+          - virtual_y
+          - virtual_theta
+    controller:
+      base_state:
+        type: joint_state_controller/JointStateController
+        publish_rate: 200
+      base_trajectory:
+        type: velocity_controllers/JointTrajectoryController
+        joints:
+          - virtual_x
+          - virtual_y
+          - virtual_theta
+        gains:
+          virtual_x: {p: 10.0, i: 1, d: 0, i_clamp_min: -1, i_clamp_max: 1}
+          virtual_y: {p: 10.0, i: 1, d: 0, i_clamp_min: -1, i_clamp_max: 1}
+          virtual_theta: {p: 10.0, i: 1, d: 0, i_clamp_min: -1, i_clamp_max: 1}
+        constrains:
+          goal_time: 10.0
+          virtual_x:
+            goal: 0.5
+          virtual_y:
+            goal: 0.5
+          virtual_theta:
+            goal: 0.5
+      manipulator_state:
+        type: joint_state_controller/JointStateController
+        publish_rate: 200
+      manipulator_trajectory:
+        type: effort_controllers/JointTrajectoryController
+        joints:
+          - arm_joint_1
+          - arm_joint_2
+          - arm_joint_3
+          - arm_joint_4
+          - arm_joint_5
+        gains:
+          arm_joint_1: {p: 30.0, i: 2.0, d: 5.0, i_clamp_min: -1, i_clamp_max: 1}
+          arm_joint_2: {p: 30.0, i: 2.0, d: 5.0, i_clamp_min: -1, i_clamp_max: 1}
+          arm_joint_3: {p: 30.0, i: 2.0, d: 5.0, i_clamp_min: -1, i_clamp_max: 1}
+          arm_joint_4: {p: 30.0, i: 2.0, d: 5.0, i_clamp_min: -1, i_clamp_max: 1}
+          arm_joint_5: {p: 30.0, i: 2.0, d: 5.0, i_clamp_min: -1, i_clamp_max: 1}
+        constrains:
+          goal_time: 10.0
+          arm_joint_1:
+            goal: 0.1
+          arm_joint_2:
+            goal: 0.1
+          arm_joint_3:
+            goal: 0.1
+          arm_joint_4:
+            goal: 0.1
+          arm_joint_5:
+            goal: 0.1

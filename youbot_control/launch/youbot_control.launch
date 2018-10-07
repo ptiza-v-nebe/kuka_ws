@@ -1,0 +1,16 @@
+<launch>
+    <rosparam file="$(find youbot_control)/config/controllers.yaml" command="load"/>
+    <rosparam file="$(find youbot_control)/config/hardware.yaml" command="load"/>
+
+    <param name="robot_description" textfile="$(find youbot_description)/robots/youbot.urdf"/>
+
+    <node name="youbot_control_node" pkg="youbot_control" type="youbot_control_node" output="screen"/>
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" ns="/"
+        args="
+             /youbot/controller/base_state
+             /youbot/controller/base_trajectory 
+             /youbot/controller/manipulator_state
+             /youbot/controller/manipulator_trajectory  
+    "/>
+    <node name="youbot_action_mux" pkg="youbot_control" type="action_mux.py" output="screen"/> 
+</launch>

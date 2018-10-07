@@ -1,0 +1,11 @@
+controller_list:
+  - name: fake_youbot_controller
+    joints:
+      - virtual_x
+      - virtual_y
+      - virtual_theta
+      - arm_joint_1
+      - arm_joint_2
+      - arm_joint_3
+      - arm_joint_4
+      - arm_joint_5

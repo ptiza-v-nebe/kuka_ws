@@ -1,0 +1,12 @@
+<library path="lib/libyoubot_hardware_interfaces">
+  <class name="youbot_hardware_interface/YoubotBaseInterface" type="youbot_hardware_interface::YoubotBaseInterface" base_class_type="hardware_interface::RobotHW">
+    <description>
+   Interface for the youbot base
+    </description>
+  </class>
+  <class name="youbot_hardware_interface/YoubotManipulatorInterface" type="youbot_hardware_interface::YoubotManipulatorInterface" base_class_type="hardware_interface::RobotHW">
+    <description>
+   Interface for the youbot manipulator
+    </description>
+  </class>
+</library>

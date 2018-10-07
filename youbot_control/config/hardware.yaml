@@ -1,0 +1,17 @@
+robot_hardware:
+  - youbot_base_hw
+  - youbot_manipulator_hw
+youbot_base_hw:
+  type: youbot_hardware_interface/YoubotBaseInterface
+  joints:
+    - virtual_x
+    - virtual_y
+    - virtual_theta
+youbot_manipulator_hw:
+  type: youbot_hardware_interface/YoubotManipulatorInterface
+  joints:
+    - arm_joint_1
+    - arm_joint_2
+    - arm_joint_3
+    - arm_joint_4
+    - arm_joint_5

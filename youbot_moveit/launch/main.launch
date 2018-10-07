@@ -1,0 +1,14 @@
+<launch>
+  <!-- publish the robot state (tf transforms) -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+   <rosparam command="load" file="$(find youbot_moveit)/config/joint_names.yaml" ns="move_group"/>
+
+  <include file="$(find youbot_moveit)/launch/move_group.launch">
+    <arg name="publish_monitored_planning_scene" value="true" />
+  </include>
+
+  <include file="$(find youbot_moveit)/launch/moveit_rviz.launch">
+    <arg name="config" value="true"/>
+  </include>
+</launch>
