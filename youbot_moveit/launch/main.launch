@@ -1,4 +1,8 @@
 <launch>
+
+  <!--starting youbot_control -->
+   <include file="$(find youbot_control)/launch/youbot_control.launch"/>
+
   <!-- publish the robot state (tf transforms) -->
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
 
