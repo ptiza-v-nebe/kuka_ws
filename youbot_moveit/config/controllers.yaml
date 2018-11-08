@@ -1,5 +1,5 @@
 controller_list:
-  - name: /moveit/controller
+  - name: /youbot/controller/youbot_trajectory/
     action_ns: follow_joint_trajectory
     type: FollowJointTrajectory
     default: true
