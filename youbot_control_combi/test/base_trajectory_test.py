@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import roslib
-roslib.load_manifest('youbot_control')
+roslib.load_manifest('youbot_control_combi')
 
 import rospy
 import actionlib

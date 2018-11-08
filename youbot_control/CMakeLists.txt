@@ -7,12 +7,11 @@ find_package(catkin REQUIRED COMPONENTS
   hardware_interface
   roscpp
   youbot_driver
-  combined_robot_hw
 )
 
 catkin_package(
   INCLUDE_DIRS include
-  CATKIN_DEPENDS youbot_driver control_toolbox controller_manager hardware_interface roscpp combined_robot_hw
+  CATKIN_DEPENDS youbot_driver control_toolbox controller_manager hardware_interface roscpp
 )
 
 ## preprocessor definitions
@@ -24,16 +23,15 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_library(youbot_hardware_interfaces 
-    src/youbot_manipulator_interface.cpp
-    src/youbot_base_interface.cpp
+add_library(youbot_hardware_interfaces
+    src/youbot_interface.cpp
 )
 target_link_libraries(youbot_hardware_interfaces ${catkin_LIBRARIES})
 
 add_executable(youbot_control_node
     src/youbot_control_node.cpp
 )
-target_link_libraries(youbot_control_node ${catkin_LIBRARIES})
+target_link_libraries(youbot_control_node ${catkin_LIBRARIES} youbot_hardware_interfaces)
 
 add_custom_command(TARGET youbot_control_node POST_BUILD
     COMMAND sudo setcap cap_net_raw+ep $<TARGET_FILE:youbot_control_node>  

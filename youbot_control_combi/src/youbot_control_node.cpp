@@ -1,7 +1,7 @@
 #include <iostream>
 #include <ros/ros.h>
+#include <combined_robot_hw/combined_robot_hw.h>
 #include <controller_manager/controller_manager.h>
-#include <youbot_control/youbot_interface.hpp>
 
 int main(int argc, char** argv){
     ros::init(argc, argv, "youbot_control_node");
@@ -9,8 +9,7 @@ int main(int argc, char** argv){
     ros::AsyncSpinner spinner(1);
     spinner.start();
     ros::NodeHandle nh;
-    
-    youbot_hardware_interface::YoubotInterface hw;
+    combined_robot_hw::CombinedRobotHW hw;
     bool init_success = hw.init(nh,nh);
 
     controller_manager::ControllerManager cm(&hw,nh);

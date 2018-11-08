@@ -1,4 +1,4 @@
-#include <youbot_control/youbot_manipulator_interface.hpp>
+#include <youbot_control_combi/youbot_manipulator_interface.hpp>
 
 using namespace hardware_interface;
 using namespace youbot;

@@ -1,4 +1,4 @@
-<library path="lib/libyoubot_hardware_interfaces">
+<library path="lib/libyoubot_hardware_interfaces_combi">
   <class name="youbot_hardware_interface/YoubotBaseInterface" type="youbot_hardware_interface::YoubotBaseInterface" base_class_type="hardware_interface::RobotHW">
     <description>
    Interface for the youbot base
