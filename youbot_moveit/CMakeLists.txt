@@ -44,12 +44,15 @@ catkin_package(
 )
 
 include_directories(
-# include
+ include
   ${catkin_INCLUDE_DIRS}
 )
 
-#add_executable(youbot_constraint_tests src/youbot_constraint_tests.cpp)
-#target_link_libraries(youbot_constraint_tests ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+add_library(inter_utils
+  src/interactivity/interactive_robot.cpp
+  src/interactivity/imarker.cpp
+  src/interactivity/pose_string.cpp
+)
 
 add_executable(youbot_joint_constraint src/youbot_joint_constraint.cpp)
 target_link_libraries(youbot_joint_constraint ${catkin_LIBRARIES} ${Boost_LIBRARIES})
@@ -60,8 +63,12 @@ target_link_libraries(youbot_position_constraint ${catkin_LIBRARIES} ${Boost_LIB
 add_executable(youbot_orientation_constraint src/youbot_orientation_constraint.cpp)
 target_link_libraries(youbot_orientation_constraint ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
-#add_executable(youbot_construct_constraint src/youbot_construct_constraint.cpp)
-#target_link_libraries(youbot_construct_constraint ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+add_executable(youbot_interactive_robot src/youbot_interactive_robot.cpp)
+target_link_libraries(youbot_interactive_robot inter_utils ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+
+add_executable(interactivity_tutorial src/interactivity_tutorial.cpp)
+target_link_libraries(interactivity_tutorial inter_utils ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+
 
 
 install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
