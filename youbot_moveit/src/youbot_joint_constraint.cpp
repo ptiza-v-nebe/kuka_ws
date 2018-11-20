@@ -38,12 +38,12 @@ while(ros::ok()){
   move_group.clearPathConstraints();
   visual_tools.prompt("move to pose that initially satisfy joint constraints");
   std::vector<double> joint_group_positions1;
-  joint_group_positions1.push_back(0.0);  // radians
-  joint_group_positions1.push_back(0.0);  // radians
-  joint_group_positions1.push_back(1.7);  // radians
+  joint_group_positions1.push_back(0.0);  // meter
+  joint_group_positions1.push_back(0.0);  // meter
+  joint_group_positions1.push_back(1.7);  // meter
   joint_group_positions1.push_back(3.0);  // arm_joint_1 (has to be specified)
   joint_group_positions1.push_back(1.9);  // arm_joint_2 (has to be specified)
-  joint_group_positions1.push_back(-2.1);  // arm_joint_3 (has to be specified)
+  joint_group_positions1.push_back(-2.1); // arm_joint_3 (has to be specified)
   joint_group_positions1.push_back(0.6);  // arm_joint_4
   joint_group_positions1.push_back(0.6);  // arm_joint_5
   move_group.setJointValueTarget(joint_group_positions1);

@@ -12,7 +12,7 @@ endif()
 
 find_package(catkin REQUIRED COMPONENTS
   geometric_shapes
-  interactive_markers
+  #interactive_markers
   moveit_commander
   moveit_core
   moveit_fake_controller_manager
@@ -31,14 +31,14 @@ find_package(Boost REQUIRED system filesystem date_time thread)
 
 catkin_package(
   LIBRARIES
-    interactivity_utils
+    #interactivity_utils
   INCLUDE_DIRS
     ${THIS_PACKAGE_INCLUDE_DIRS}
   CATKIN_DEPENDS
     moveit_core
     moveit_visual_tools
     moveit_ros_planning_interface
-    interactive_markers
+    #interactive_markers
   DEPENDS
     EIGEN3
 )
@@ -48,11 +48,11 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_library(inter_utils
-  src/interactivity/interactive_robot.cpp
-  src/interactivity/imarker.cpp
-  src/interactivity/pose_string.cpp
-)
+#add_library(inter_utils
+#  src/interactivity/interactive_robot.cpp
+#  src/interactivity/imarker.cpp
+#  src/interactivity/pose_string.cpp
+#)
 
 add_executable(youbot_joint_constraint src/youbot_joint_constraint.cpp)
 target_link_libraries(youbot_joint_constraint ${catkin_LIBRARIES} ${Boost_LIBRARIES})
@@ -63,11 +63,14 @@ target_link_libraries(youbot_position_constraint ${catkin_LIBRARIES} ${Boost_LIB
 add_executable(youbot_orientation_constraint src/youbot_orientation_constraint.cpp)
 target_link_libraries(youbot_orientation_constraint ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
-add_executable(youbot_interactive_robot src/youbot_interactive_robot.cpp)
-target_link_libraries(youbot_interactive_robot inter_utils ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+add_executable(youbot_cartesian_path_constraint src/youbot_cartesian_path_constraint.cpp)
+target_link_libraries(youbot_cartesian_path_constraint ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
-add_executable(interactivity_tutorial src/interactivity_tutorial.cpp)
-target_link_libraries(interactivity_tutorial inter_utils ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+#add_executable(youbot_interactive_robot src/youbot_interactive_robot.cpp)
+#target_link_libraries(youbot_interactive_robot inter_utils ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+
+#add_executable(interactivity_tutorial src/interactivity_tutorial.cpp)
+#target_link_libraries(interactivity_tutorial inter_utils ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
 
 

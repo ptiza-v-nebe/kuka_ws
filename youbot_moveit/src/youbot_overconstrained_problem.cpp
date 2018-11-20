@@ -1,3 +1,5 @@
+
+
 #include <moveit/move_group_interface/move_group_interface.h>
 #include <moveit/planning_scene_interface/planning_scene_interface.h>
 
@@ -36,10 +38,11 @@ int main(int argc, char **argv)
   bool home_success = (move_group.plan(home_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
   move_group.move();
 
+  //Robot takes each time new path to get to the goal, planner dont care on which way going to the goal
+  //this needs to be contrainted to get more controlled movements
   while (ros::ok())
   {
-    visual_tools.prompt("move to a pose on arbitrary way");
-    move_group.clearPathConstraints();
+    visual_tools.prompt("move to a pose on arbitrary way 1");
     //set target, plan and move
     geometry_msgs::Pose target_pose1;
     quaternionTFToMsg(tf::Quaternion(tf::Vector3(0, 0, 1), 0.785), target_pose1.orientation);
@@ -52,40 +55,18 @@ int main(int argc, char **argv)
     bool target_success1 = (move_group.plan(target_plan1) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
     move_group.move();
 
-    visual_tools.prompt("move to position constrained pose");
-    //create target
-    geometry_msgs::Pose target_pose;
-    quaternionTFToMsg(tf::Quaternion(tf::Vector3(0, 1, 0), 0.785), target_pose.orientation);
-    target_pose.position.x = 0.4;
-    target_pose.position.y = 0.4;
-    target_pose.position.z = 0.1;
-
-    //construct constrains
-    geometry_msgs::PointStamped point_stamped;
-    point_stamped.point = target_pose.position;
-    point_stamped.header.frame_id = "virtual_link_1"; //reference frame for the bounding box
-    float tolerance = 0.3;
-    move_group.setPathConstraints(kinematic_constraints::constructGoalConstraints("gripper_tip", point_stamped, tolerance));
-
-    //show constrains
-    Eigen::Affine3d wcuboid_pose = Eigen::Affine3d::Identity();
-    wcuboid_pose.translation().x() += target_pose.position.x;
-    wcuboid_pose.translation().y() += target_pose.position.y;
-    Eigen::Vector3d min_point, max_point;
-    min_point << -tolerance, -tolerance, 0;
-    max_point << tolerance, tolerance, tolerance;
-    visual_tools.publishWireframeCuboid(wcuboid_pose, min_point, max_point, rvt::GREEN);
-    visual_tools.trigger();
-
+    visual_tools.prompt("move to a pose on arbitrary way 2");
     //set target, plan and move
-    move_group.setPoseTarget(target_pose);
+    geometry_msgs::Pose target_pose2;
+    quaternionTFToMsg(tf::Quaternion(tf::Vector3(0, 1, 1), 0.785), target_pose2.orientation);
+    target_pose2.position.x = 0.3;
+    target_pose2.position.y = 0.3;
+    target_pose2.position.z = 0.3;
+    move_group.setPoseTarget(target_pose2);
     move_group.setPlanningTime(15.0);
-    moveit::planning_interface::MoveGroupInterface::Plan target_plan;
-    bool target_success = (move_group.plan(target_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+    moveit::planning_interface::MoveGroupInterface::Plan target_plan2;
+    bool target_success2 = (move_group.plan(target_plan2) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
     move_group.move();
-
-    //clean up all constraints
-    move_group.clearPathConstraints();
   }
   ros::shutdown();
   return 0;
