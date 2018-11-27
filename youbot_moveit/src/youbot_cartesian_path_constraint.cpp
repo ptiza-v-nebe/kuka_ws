@@ -18,34 +18,6 @@
 #include <actionlib/client/simple_action_client.h>
 #include <control_msgs/FollowJointTrajectoryAction.h>
 
-bool executeTrajectory(const trajectory_msgs::JointTrajectory &trajectory)
-{
-  // Create a Follow Joint Trajectory Action Client
-  actionlib::SimpleActionClient<control_msgs::FollowJointTrajectoryAction> ac("/youbot/controller/youbot_trajectory/follow_joint_trajectory", true);
-  if (!ac.waitForServer(ros::Duration(2.0)))
-  {
-    ROS_ERROR("Could not connect to action server");
-    return false;
-  }
-
-  control_msgs::FollowJointTrajectoryGoal goal;
-  goal.trajectory = trajectory;
-  goal.goal_time_tolerance = ros::Duration(1.0);
-
-  ac.sendGoal(goal);
-
-  if (ac.waitForResult(goal.trajectory.points[goal.trajectory.points.size() - 1].time_from_start + ros::Duration(5)))
-  {
-    ROS_INFO("Action server reported successful execution");
-    return true;
-  }
-  else
-  {
-    ROS_WARN("Action server could not execute trajectory");
-    return false;
-  }
-}
-
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "move_group_interface_tutorial");
@@ -87,8 +59,8 @@ int main(int argc, char **argv)
     moveit_msgs::Constraints constraints;
     jc.joint_name = "arm_joint_1";
     jc.position = 3.0;
-    jc.tolerance_above = 0.01;
-    jc.tolerance_below = 0.01;
+    jc.tolerance_above = 0.1;
+    jc.tolerance_below = 0.1;
     jc.weight = 1;
     constraints.joint_constraints.push_back(jc);
     move_group.setPathConstraints(constraints);
@@ -116,6 +88,7 @@ int main(int argc, char **argv)
     waypoint_pose.position.z += 0.1;
     waypoints.push_back(waypoint_pose); // down
     waypoint_pose.position.y -= 0.1;
+    quaternionTFToMsg(tf::Quaternion(tf::Vector3(0, 0, 1), 0.57), waypoint_pose.orientation);
     waypoints.push_back(waypoint_pose); // right
     waypoint_pose.position.z -= 0.1;
     waypoint_pose.position.y += 0.1;
@@ -137,7 +110,7 @@ int main(int argc, char **argv)
     moveit_msgs::RobotTrajectory trajectory;
     const double jump_threshold = 0.0; //this value prevent to compute path
     const double eef_step = 0.01;
-    double fraction = move_group.computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory, constraints);
+    double fraction = move_group.computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory /*, constraints*/);
     ROS_INFO_NAMED("tutorial", "Visualizing plan 4 (Cartesian path) (%.2f%% acheived)", fraction * 100.0);
 
     robot_trajectory::RobotTrajectory robotTrajectory(move_group.getCurrentState()->getRobotModel(), "youbot");

@@ -1,0 +1,4 @@
+<launch>
+  <node name="ee_pose_publisher" pkg="youbot_moveit" type="ee_pose_publisher.py" />
+  <node name="rqt_multiplt" pkg="rqt_multiplot" type="rqt_multiplot" args="--multiplot-config $(find youbot_moveit)/measurements/rqt_multiplot.xml" output="screen" />
+</launch>

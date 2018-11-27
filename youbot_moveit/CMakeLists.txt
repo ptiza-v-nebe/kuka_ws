@@ -66,6 +66,10 @@ target_link_libraries(youbot_orientation_constraint ${catkin_LIBRARIES} ${Boost_
 add_executable(youbot_cartesian_path_constraint src/youbot_cartesian_path_constraint.cpp)
 target_link_libraries(youbot_cartesian_path_constraint ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
+add_executable(youbot_rectangle src/youbot_rectangle.cpp)
+target_link_libraries(youbot_rectangle ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+
+
 #add_executable(youbot_interactive_robot src/youbot_interactive_robot.cpp)
 #target_link_libraries(youbot_interactive_robot inter_utils ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 

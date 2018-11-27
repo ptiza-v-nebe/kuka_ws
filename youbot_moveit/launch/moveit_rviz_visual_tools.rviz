@@ -324,7 +324,12 @@ Visualization Manager:
       Marker Topic: /rviz_visual_tools
       Name: MarkerArray
       Namespaces:
-        {}
+        Cylinder: true
+        Text: true
+        pt0: true
+        pt1: true
+        pt2: true
+        pt3: true
       Queue Size: 100
       Value: true
   Enabled: true
@@ -343,25 +348,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/ThirdPersonFollower
-      Distance: 1.40359223
+      Distance: 1.10987902
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -0.0507975817
-        Y: -0.161147088
-        Z: 3.57627869e-07
+        X: -0.159869134
+        Y: -0.253687024
+        Z: 1.1920929e-07
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.0500000007
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.819797039
+      Pitch: 0.454796612
       Target Frame: virtual_link_1
       Value: ThirdPersonFollower (rviz)
-      Yaw: 3.46854854
+      Yaw: 4.18856478
     Saved: ~
 Window Geometry:
   Displays:
