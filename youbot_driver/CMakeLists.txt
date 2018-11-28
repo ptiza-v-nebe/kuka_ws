@@ -1,175 +1,128 @@
-PROJECT(youbot_driver)
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8.3)
+cmake_minimum_required(VERSION 2.8.3)
+project(youbot_driver)
 
-############## ROS Stuff ##############
-#handle youbot_driver as ros package
-#######################################
-find_package(catkin REQUIRED COMPONENTS
-  roscpp  
-)
+find_package(catkin REQUIRED COMPONENTS roscpp rosconsole)
+find_package(Boost REQUIRED COMPONENTS thread date_time filesystem system regex)
 
+if(WIN32)
+	add_definitions(-D_USE_MATH_DEFINES)    # get M_PI under Windows
+	add_definitions(-DWIN32_LEAN_AND_MEAN)  # avoid inclusion of WinSock.h by windows.h, as we need WinSock2.h
+	add_definitions(-DNOMINMAX)             # be able to use std::max, instead of windows defined functions
+	add_definitions(/wd4800)                # disable warning: variable set to boolean value
+
+	# need WinPcap library, using own cmake find file
+	set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
+	find_package(WinPcap REQUIRED)
+endif()
+
+if(WIN32)
+	set(INCLUDE_DIRS
+		include
+		include/youbot_driver/soem/osal
+		include/youbot_driver/soem/osal/win32
+		include/youbot_driver/soem/oshw/win32
+		${WINPCAP_INCLUDE_DIRS}
+	)
+else(WIN32)
+	set(INCLUDE_DIRS
+		include
+		include/youbot_driver/soem/osal
+		include/youbot_driver/soem/oshw/linux
+	)
+endif(WIN32)
+
+## Note exported include dirs for install in cmake/config.cmake
 catkin_package(
-  INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/include src/soem/include
-  LIBRARIES YouBotDriver soem
+	INCLUDE_DIRS ${INCLUDE_DIRS}
+	LIBRARIES YouBotDriver soem rt
+	CATKIN_DEPENDS roscpp rosconsole
+	DEPENDS Boost
+	CFG_EXTRAS config.cmake
 )
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
+
+include_directories(
+	${INCLUDE_DIRS}
+	${catkin_INCLUDE_DIRS}
+)
+link_directories(${catkin_LIBRARY_DIRS})
+add_definitions(-DUSE_ROS_LOGGING)
+
+########### CppUnit and tests ###########
+find_package(CppUnit)
+IF(CppUnit_FOUND)
+	message(STATUS "SUCCESSFUL: CPP_UNIT found")
+	add_subdirectory(src/testing)
+ELSE(CppUnit_FOUND)
+#	MESSAGE(STATUS "WARNING: CPP_UNIT not found")
+ENDIF (CppUnit_FOUND)
 
 
-############## cmake flags ##############
-# PIC -> position independend code
-#########################################
-SET(CMAKE_BUILD_TYPE Release)
-SET(CMAKE_C_FLAGS_DEBUG "-fPIC -Wall -g")
-SET(CMAKE_CXX_FLAGS_DEBUG "-fPIC -Wall -g")
-SET(CMAKE_C_FLAGS_RELEASE "-fPIC -Wall -Wno-unused-but-set-variable")
-SET(CMAKE_CXX_FLAGS_RELEASE "-fPIC -Wall -Wno-unused-but-set-variable")
-SET(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake-modules")
-#SET(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/installed")
-
-
-############## Find Boost ###############
-#Search for boost on system
-#########################################
-SET(Boost_ADDITIONAL_VERSIONS "1.39" "1.39.0" "1.40" "1.40.0" "1.41" "1.41.0" "1.42" "1.42.0")
-FIND_PACKAGE(Boost REQUIRED COMPONENTS thread date_time filesystem system regex)
-
-
-############## Create Docs ##############
-#Use doxygen and latex for documentary
-#########################################
+########### Doxygen ###########
 #SET(DOXYFILE_LATEX "NO")
 #SET(DOXYFILE_OUTPUT_DIR ${PROJECT_SOURCE_DIR}/doc)
 #include(UseDoxygen)
 
+########### Simple Open EtherCAT Master Library ###########
+add_subdirectory(src/soem)
 
-############## Add soem #################
-#Simple Open EtherCAT Master Library
-#########################################
-add_subdirectory(src/soem soem)
+########### youBot display example application ###########
+#add_subdirectory(src/display)
 
-
-########### Main youbot files ###########
-#Build apps
-#########################################
-#define source files
-SET(YOUBOT_DRIVER_SRC
-  src/EthercatMaster.cpp
-  src/EthercatMasterWithThread.cpp
-  src/EthercatMasterWithoutThread.cpp
+set(YOUBOT_DRIVER_SRC
+  src/youbot/EthercatMaster.cpp
+  src/youbot/EthercatMasterWithThread.cpp
+  src/youbot/EthercatMasterWithoutThread.cpp
   src/generic/Logger.cpp
   src/generic/ConfigFile.cpp
   src/generic/PidController.cpp
   src/generic-joint/JointData.cpp
   src/generic-joint/JointTrajectory.cpp
-  src/YouBotJoint.cpp
-  src/JointLimitMonitor.cpp
-  src/YouBotBase.cpp
-  src/YouBotManipulator.cpp
-  src/YouBotGripper.cpp
-  src/YouBotGripperBar.cpp
-  src/YouBotGripperParameter.cpp
-  src/DataTrace.cpp
-  src/GripperDataTrace.cpp
-  src/YouBotJointParameter.cpp
-  src/YouBotJointParameterReadOnly.cpp
-  src/YouBotJointParameterPasswordProtected.cpp
-  src/JointTrajectoryController.cpp
+  src/youbot/YouBotJoint.cpp
+  src/youbot/JointLimitMonitor.cpp
+  src/youbot/YouBotBase.cpp
+  src/youbot/YouBotManipulator.cpp
+  src/youbot/YouBotGripper.cpp
+  src/youbot/YouBotGripperBar.cpp
+  src/youbot/YouBotGripperParameter.cpp
+  src/youbot/DataTrace.cpp
+  src/youbot/GripperDataTrace.cpp
+  src/youbot/YouBotJointParameter.cpp
+  src/youbot/YouBotJointParameterReadOnly.cpp
+  src/youbot/YouBotJointParameterPasswordProtected.cpp
+  src/youbot/JointTrajectoryController.cpp
   src/base-kinematic/FourSwedishWheelOmniBaseKinematic.cpp
   src/base-kinematic/FourSwedishWheelOmniBaseKinematicConfiguration.cpp
 )
 
-#define header files
-SET(YOUBOT_DRIVER_HEADERS
-  EthercatMaster.hpp
-  EthercatMasterInterface.hpp
-  EthercatMasterWithThread.hpp
-  EthercatMasterWithoutThread.hpp
-  YouBotGripper.hpp
-  YouBotGripperBar.hpp
-  YouBotGripperParameter.hpp
-  YouBotBase.hpp
-  YouBotManipulator.hpp
-  YouBotJoint.hpp
-  JointLimitMonitor.hpp
-  YouBotJointParameterReadOnly.hpp
-  YouBotJointParameterPasswordProtected.hpp
-  YouBotJointParameter.hpp
-  YouBotSlaveMailboxMsg.hpp
-  YouBotSlaveMsg.hpp
-  ProtocolDefinitions.hpp
-  YouBotJointStorage.hpp
-  DataTrace.hpp
-  GripperDataTrace.hpp
-  JointTrajectoryController.hpp
-  base-kinematic/FourSwedishWheelOmniBaseKinematic.hpp
-  base-kinematic/FourSwedishWheelOmniBaseKinematicConfiguration.hpp
-  base-kinematic/WheeledBaseKinematic.hpp
-  generic/Exceptions.hpp
-  generic/Logger.hpp
-  generic/Time.hpp
-  generic/Units.hpp
-  generic/ConfigFile.hpp
-  generic/PidController.hpp
-  generic/dataobjectlockfree/DataObjectLockFree.hpp
-  generic/dataobjectlockfree/target.hpp
-  generic/dataobjectlockfree/os/oro_arch.h
-  generic/dataobjectlockfree/os/oro_gcc/oro_arch.h
-  generic/dataobjectlockfree/os/oro_i386/oro_arch.h
-  generic/dataobjectlockfree/os/oro_msvc/oro_arch.h
-  generic/dataobjectlockfree//os/oro_powerpc/oro_arch.h  
-  generic/dataobjectlockfree/os/oro_powerpc/oro_atomic.h  
-  generic/dataobjectlockfree/os/oro_powerpc/oro_system.h
-  generic/dataobjectlockfree/os/oro_x86_64/oro_arch.h
-  generic-gripper/Gripper.hpp
-  generic-gripper/GripperData.hpp
-  generic-gripper/GripperParameter.hpp
-  generic-joint/Joint.hpp
-  generic-joint/JointData.hpp
-  generic-joint/JointTrajectory.hpp
-  generic-joint/JointParameter.hpp
-  one-dof-gripper/OneDOFGripper.hpp
-  one-dof-gripper/OneDOFGripperData.hpp
+add_library(YouBotDriver ${YOUBOT_DRIVER_SRC})
+target_link_libraries(YouBotDriver soem ${catkin_LIBRARIES})
+
+
+#install binary and lib
+install(TARGETS YouBotDriver
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
-#define configs
-SET(YOUBOT_DRIVER_CONFIG
-  ${PROJECT_SOURCE_DIR}/config/youbot-ethercat.cfg
-  ${PROJECT_SOURCE_DIR}/config/youbot-base.cfg
-  ${PROJECT_SOURCE_DIR}/config/youbot-manipulator.cfg
+#copy header files
+install(DIRECTORY include/${PROJECT_NAME}/
+  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
 )
 
-#static link of boost and soem to YouBotDriver
-ADD_LIBRARY(YouBotDriver ${YOUBOT_DRIVER_SRC})
-TARGET_LINK_LIBRARIES(YouBotDriver boost_thread boost_date_time boost_filesystem boost_system boost_regex)
-TARGET_LINK_LIBRARIES(YouBotDriver soem)
-TARGET_INCLUDE_DIRECTORIES(YouBotDriver PUBLIC include include/generic)
-
-#create new shared library but link static libraries
-ADD_LIBRARY(YouBotDriverShared SHARED "")
-SET_TARGET_PROPERTIES(YouBotDriverShared PROPERTIES OUTPUT_NAME "YouBotDriver")
-SET_TARGET_PROPERTIES(YouBotDriverShared PROPERTIES LINKER_LANGUAGE CXX)
-TARGET_LINK_LIBRARIES(YouBotDriverShared -Wl,-whole-archive YouBotDriver soem -Wl,-no-whole-archive)
+#copy config files
+install(DIRECTORY config
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
 
 
-########### Install driver ##############
-#Install libYouBotDriver.so and headers
-#########################################
-MACRO(INSTALL_HEADERS_WITH_DIRECTORY HEADER_LIST)
-  FOREACH(HEADER ${${HEADER_LIST}})
-    STRING(REGEX MATCH "(.*)[/\\]" DIR ${HEADER})
-    INSTALL(FILES include/${HEADER} DESTINATION include/youbot/${DIR})
-  ENDFOREACH(HEADER)
-ENDMACRO(INSTALL_HEADERS_WITH_DIRECTORY)
+#INSTALL(TARGETS YouBotDriver YouBotDriverShared RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
 
-MACRO(INSTALL_CONFIG_WITH_DIRECTORY CONFIG_LIST)
-  FOREACH(CONFIG ${${CONFIG_LIST}})
-    STRING(REGEX MATCH "(.*)[/\\]" DIR ${CONFIG})
-    INSTALL(FILES ${CONFIG} DESTINATION config)
-  ENDFOREACH(CONFIG)
-ENDMACRO(INSTALL_CONFIG_WITH_DIRECTORY)
 
-#copy header and config files
-INSTALL_HEADERS_WITH_DIRECTORY(YOUBOT_DRIVER_HEADERS)
-INSTALL_CONFIG_WITH_DIRECTORY(YOUBOT_DRIVER_CONFIG)
-#copy library and executables
-INSTALL(TARGETS YouBotDriverShared RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
+#ADD_EXECUTABLE(YouBot_test
+#  ${PROJECT_SOURCE_DIR}/Test_commutation.cpp
+#)
+
+#target_link_libraries(YouBot_test YouBotDriver)
 

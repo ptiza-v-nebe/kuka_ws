@@ -9,6 +9,7 @@
 
 #include <moveit_visual_tools/moveit_visual_tools.h>
 #include <math.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
 int main(int argc, char** argv)
 {
@@ -77,7 +78,8 @@ while(ros::ok()){
 
   //configure, plan and move to pose goal
   geometry_msgs::Pose target_pose;
-  quaternionTFToMsg(tf::Quaternion(tf::Vector3(0,1,0),0.785), target_pose.orientation);
+  target_pose.orientation = tf2::toMsg( tf2::Quaternion(tf2::Vector3(0,1,0), 0.785) );
+  
   target_pose.position.x = 0.4;
   target_pose.position.y = 0.4;
   target_pose.position.z = 0.1;

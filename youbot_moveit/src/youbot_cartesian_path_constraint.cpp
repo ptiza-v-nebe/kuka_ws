@@ -18,6 +18,8 @@
 #include <actionlib/client/simple_action_client.h>
 #include <control_msgs/FollowJointTrajectoryAction.h>
 
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "move_group_interface_tutorial");
@@ -67,7 +69,7 @@ int main(int argc, char **argv)
 
     visual_tools.prompt("Move to starting pose");
     geometry_msgs::Pose start_pose;
-    quaternionTFToMsg(tf::Quaternion(tf::Vector3(1, 0, 0), 0.0), start_pose.orientation);
+    start_pose.orientation = tf2::toMsg( tf2::Quaternion(tf2::Vector3(1, 0, 0), 0.0) );
     start_pose.position.x = 0.0;
     start_pose.position.y = 0.0;
     start_pose.position.z = 0.30;
@@ -88,7 +90,7 @@ int main(int argc, char **argv)
     waypoint_pose.position.z += 0.1;
     waypoints.push_back(waypoint_pose); // down
     waypoint_pose.position.y -= 0.1;
-    quaternionTFToMsg(tf::Quaternion(tf::Vector3(0, 0, 1), 0.57), waypoint_pose.orientation);
+    waypoint_pose.orientation = tf2::toMsg( tf2::Quaternion(tf2::Vector3(0, 0, 1), 0.57) );
     waypoints.push_back(waypoint_pose); // right
     waypoint_pose.position.z -= 0.1;
     waypoint_pose.position.y += 0.1;

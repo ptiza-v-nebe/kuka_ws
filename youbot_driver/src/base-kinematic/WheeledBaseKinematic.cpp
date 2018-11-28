@@ -48,7 +48,7 @@
  * License LGPL and BSD license along with this program.
  *
  ****************************************************************/
-#include "base-kinematic/WheeledBaseKinematic.hpp" 
+#include "youbot_driver/base-kinematic/WheeledBaseKinematic.hpp" 
 namespace youbot {
 
 

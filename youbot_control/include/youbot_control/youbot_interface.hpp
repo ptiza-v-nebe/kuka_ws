@@ -2,9 +2,9 @@
 #define YOUBOT_INTERFACE_HPP
 
 #include <iostream>
-#include "youbot/YouBotManipulator.hpp"
-#include "youbot/YouBotBase.hpp"
-#include "youbot/DataTrace.hpp"
+#include "youbot_driver/youbot/YouBotManipulator.hpp"
+#include "youbot_driver/youbot/YouBotBase.hpp"
+#include "youbot_driver/youbot/DataTrace.hpp"
 
 #include <hardware_interface/joint_state_interface.h>
 #include <hardware_interface/joint_command_interface.h>

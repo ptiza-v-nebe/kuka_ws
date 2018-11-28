@@ -1,6 +1,6 @@
 // ConfigFile.cpp
 
-#include "ConfigFile.hpp"
+#include "youbot_driver/generic/ConfigFile.hpp"
 
 using std::string;
 
@@ -10,7 +10,7 @@ namespace youbot {
           string comment, string sectionStartTag, string sectionEndTag, string sentry)
   : myDelimiter(delimiter), myComment(comment), mySectionStartTag(sectionStartTag), mySectionEndTag(sectionEndTag), mySentry(sentry) {
 
-    if(filepath.at(filepath.length()-1) != '/'){
+    if (filepath.length() > 0 && filepath.at(filepath.length() - 1) != '/') {
       filepath.append("/");
     }
     filepath.append(filename);

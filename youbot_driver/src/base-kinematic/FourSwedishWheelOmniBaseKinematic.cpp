@@ -48,7 +48,7 @@
  * License LGPL and BSD license along with this program.
  *
  ****************************************************************/
-#include "base-kinematic/FourSwedishWheelOmniBaseKinematic.hpp"
+#include "youbot_driver/base-kinematic/FourSwedishWheelOmniBaseKinematic.hpp"
 namespace youbot {
 
 FourSwedishWheelOmniBaseKinematic::FourSwedishWheelOmniBaseKinematic() {

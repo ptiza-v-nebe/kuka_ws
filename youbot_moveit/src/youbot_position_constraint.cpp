@@ -10,6 +10,7 @@
 #include <moveit_visual_tools/moveit_visual_tools.h>
 #include <math.h>
 #include <moveit/kinematic_constraints/utils.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
 int main(int argc, char **argv)
 {
@@ -42,7 +43,7 @@ int main(int argc, char **argv)
     move_group.clearPathConstraints();
     //set target, plan and move
     geometry_msgs::Pose target_pose1;
-    quaternionTFToMsg(tf::Quaternion(tf::Vector3(0, 0, 1), 0.785), target_pose1.orientation);
+    target_pose1.orientation = tf2::toMsg( tf2::Quaternion(tf2::Vector3(0, 0, 1), 0.785) );
     target_pose1.position.x = 0.3;
     target_pose1.position.y = 0.3;
     target_pose1.position.z = 0.1;
@@ -55,7 +56,7 @@ int main(int argc, char **argv)
     visual_tools.prompt("move to position constrained pose");
     //create target
     geometry_msgs::Pose target_pose;
-    quaternionTFToMsg(tf::Quaternion(tf::Vector3(0, 1, 0), 0.785), target_pose.orientation);
+    target_pose.orientation = tf2::toMsg( tf2::Quaternion(tf2::Vector3(0, 1, 0), 0.785) );
     target_pose.position.x = 0.4;
     target_pose.position.y = 0.4;
     target_pose.position.z = 0.1;

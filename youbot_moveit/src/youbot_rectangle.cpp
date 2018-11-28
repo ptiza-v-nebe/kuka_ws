@@ -96,7 +96,8 @@ int main(int argc, char **argv)
 
     visual_tools.prompt("Move to starting pose");
     geometry_msgs::Pose start_pose;
-    quaternionTFToMsg(tf::Quaternion(tf::Vector3(1, 0, 0), 0.0), start_pose.orientation);
+    start_pose.orientation = tf2::toMsg( tf2::Quaternion(tf2::Vector3(1, 0, 0), 0.0) );
+    
     start_pose.position.x = 0.0;
     start_pose.position.y = 0.0;
     start_pose.position.z = 0.32;
